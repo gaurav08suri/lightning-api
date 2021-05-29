@@ -28,17 +28,20 @@ public class Application {
         Random rnd = new Random();
 
         Javalin app = Javalin.create(c -> c.server(() -> new Server(threadPool)) ).start(5433);
-//        Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres", "postgres", "postgres");
         DSLContext dslContext = DSL.using(StoreSource.REGISTRATION.dataSource(), SQLDialect.POSTGRES);
         app.get("/", (ctx) -> ctx.result("Server is up and running"));
         app.post("/participant_check", (ctx) -> {
             Participants participant = ctx.bodyAsClass(Participants.class);
             String sql = null;
             String param = null;
-            if(participant.getMobile() != null) {
+            int otp = rnd.nextInt(999999);
+            if("INDIA".equalsIgnoreCase(participant.getCountry())) {
                 sql = "select 1 from registration_app.participants where mobile = :param";
                 param = participant.getMobile();
-            } else if (participant.getMail() != null) {
+                RedisModule.module().set(participant.getMobile(), String.valueOf(otp));
+                String queryParams = String.format("country=91&sender=AMBMHT&route=4&mobiles=%s&authkey=xxxxxxxx&DLT_TE_ID=1107160654358640880&message=%s", participant.getMobile(), URLEncoder.encode(String.format("JSCA! Your one-time password is %s - Dada Bhagwan Vignan Foundation", otp), StandardCharsets.UTF_8.toString()));
+                HttpModule.module().execute("http://api.msg91.com/api/sendhttp.php?" + queryParams);
+            } else if("REST OF WORLD".equalsIgnoreCase(participant.getCountry())) {
                 sql = "select 1 from registration_app.participants where mail = :param";
                 param = participant.getMail();
             }
@@ -54,7 +57,7 @@ public class Application {
 
                 if("INDIA".equalsIgnoreCase(participant.getCountry())) {
                     RedisModule.module().set(participant.getMobile(), String.valueOf(otp));
-                    String queryParams = String.format("country=91&sender=AMBMHT&route=4&mobiles=%s&authkey=xxxxxxxxxxx&DLT_TE_ID=1107160654358640880&message=%s", participant.getMobile(), URLEncoder.encode(String.format("JSCA! Your one-time password is %s - Dada Bhagwan Vignan Foundation", otp), StandardCharsets.UTF_8.toString()));
+                    String queryParams = String.format("country=91&sender=AMBMHT&route=4&mobiles=%s&authkey=xxxxxxxx&DLT_TE_ID=1107160654358640880&message=%s", participant.getMobile(), URLEncoder.encode(String.format("JSCA! Your one-time password is %s - Dada Bhagwan Vignan Foundation", otp), StandardCharsets.UTF_8.toString()));
                     HttpModule.module().execute("http://api.msg91.com/api/sendhttp.php?" + queryParams);
                 } else if("REST OF WORLD".equalsIgnoreCase(participant.getCountry())) {
 
