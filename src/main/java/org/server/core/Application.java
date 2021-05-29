@@ -27,7 +27,10 @@ public class Application {
         QueuedThreadPool threadPool = new QueuedThreadPool(600, 10, 60);
         Random rnd = new Random();
 
-        Javalin app = Javalin.create(c -> c.server(() -> new Server(threadPool)) ).start(5433);
+        Javalin app = Javalin.create(c -> {
+            c.enableCorsForAllOrigins();
+            c.server(() -> new Server(threadPool));
+        } ).start(5433);
         DSLContext dslContext = DSL.using(StoreSource.REGISTRATION.dataSource(), SQLDialect.POSTGRES);
         app.get("/", (ctx) -> ctx.result("Server is up and running"));
         app.post("/participant_check", (ctx) -> {
@@ -36,12 +39,18 @@ public class Application {
             String param = null;
             int otp = rnd.nextInt(999999);
             if("INDIA".equalsIgnoreCase(participant.getCountry())) {
+                if(participant.getMobile() == null || participant.getMobile().isEmpty()) {
+                    ctx.result("Mobile not present").status(441);
+                }
                 sql = "select 1 from registration_app.participants where mobile = :param";
                 param = participant.getMobile();
                 RedisModule.module().set(participant.getMobile(), String.valueOf(otp));
                 String queryParams = String.format("country=91&sender=AMBMHT&route=4&mobiles=%s&authkey=xxxxxxxx&DLT_TE_ID=1107160654358640880&message=%s", participant.getMobile(), URLEncoder.encode(String.format("JSCA! Your one-time password is %s - Dada Bhagwan Vignan Foundation", otp), StandardCharsets.UTF_8.toString()));
                 HttpModule.module().execute("http://api.msg91.com/api/sendhttp.php?" + queryParams);
             } else if("REST OF WORLD".equalsIgnoreCase(participant.getCountry())) {
+                if(participant.getMail() == null || participant.getMail().isEmpty()) {
+                    ctx.result("Mail not present").status(441);
+                }
                 sql = "select 1 from registration_app.participants where mail = :param";
                 param = participant.getMail();
             }
@@ -49,24 +58,6 @@ public class Application {
             Map<String, String> map = new HashMap<>();
             map.put("exists", String.valueOf(result));
             ctx.json(map);
-        });
-        app.post("/send_otp", (ctx) -> {
-            Participants participant = ctx.bodyAsClass(Participants.class);
-            try {
-                int otp = rnd.nextInt(999999);
-
-                if("INDIA".equalsIgnoreCase(participant.getCountry())) {
-                    RedisModule.module().set(participant.getMobile(), String.valueOf(otp));
-                    String queryParams = String.format("country=91&sender=AMBMHT&route=4&mobiles=%s&authkey=xxxxxxxx&DLT_TE_ID=1107160654358640880&message=%s", participant.getMobile(), URLEncoder.encode(String.format("JSCA! Your one-time password is %s - Dada Bhagwan Vignan Foundation", otp), StandardCharsets.UTF_8.toString()));
-                    HttpModule.module().execute("http://api.msg91.com/api/sendhttp.php?" + queryParams);
-                } else if("REST OF WORLD".equalsIgnoreCase(participant.getCountry())) {
-
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                ctx.result("Error occurred").status(500);
-            }
-            ctx.status(200).result("Otp Sent");
         });
         app.post("/verify_otp", (ctx) -> {
             String data = ctx.body();
