@@ -84,7 +84,8 @@ public class Application {
             Map<String, String> m = obj.readValue(data, new TypeReference<Map<String,String>>(){});
             try {
                 String otp = m.get("otp");
-                String expectedOtp = RedisModule.module().get(m.get("mobile"));
+                String country = m.get("country");
+                String expectedOtp = "INDIA".equalsIgnoreCase(country) ? RedisModule.module().get(m.get("mobile")) : RedisModule.module().get(m.get("mail"));
                 if(otp.equals(expectedOtp)) {
                     String token = null;
                     try {
