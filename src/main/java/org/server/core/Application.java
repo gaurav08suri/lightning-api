@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lmax.disruptor.RingBuffer;
 import io.javalin.Javalin;
 import org.db.flyway.tables.pojos.Participants;
 import org.eclipse.jetty.server.Server;
@@ -12,6 +13,8 @@ import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
+import org.server.models.Response;
+import org.server.notification.NotificationEvent;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -26,30 +29,46 @@ public class Application {
     public static void main(String[] args) throws SQLException {
         QueuedThreadPool threadPool = new QueuedThreadPool(600, 10, 60);
         Random rnd = new Random();
-
+        RingBuffer<NotificationEvent> ringBuffer = ApplicationModule.init();
         Javalin app = Javalin.create(c -> {
             c.enableCorsForAllOrigins();
             c.server(() -> new Server(threadPool));
-        } ).start(5433);
+        } ).start(8081);
         DSLContext dslContext = DSL.using(StoreSource.REGISTRATION.dataSource(), SQLDialect.POSTGRES);
-        app.get("/", (ctx) -> ctx.result("Server is up and running"));
+        app.get("/", (ctx) -> ctx.json(Response.of("Server is up and running")));
         app.post("/participant_check", (ctx) -> {
             Participants participant = ctx.bodyAsClass(Participants.class);
             String sql = null;
             String param = null;
             int otp = rnd.nextInt(999999);
+            String msg = String.format("JSCA! Your one-time password is %s - Dada Bhagwan Vignan Foundation", otp);
             if("INDIA".equalsIgnoreCase(participant.getCountry())) {
                 if(participant.getMobile() == null || participant.getMobile().isEmpty()) {
-                    ctx.result("Mobile not present").status(441);
+                    ctx.json(Response.of("Mobile not present")).status(441);
                 }
                 sql = "select 1 from registration_app.participants where mobile = :param";
                 param = participant.getMobile();
-                RedisModule.module().set(participant.getMobile(), String.valueOf(otp));
-                String queryParams = String.format("country=91&sender=AMBMHT&route=4&mobiles=%s&authkey=xxxxxxxx&DLT_TE_ID=1107160654358640880&message=%s", participant.getMobile(), URLEncoder.encode(String.format("JSCA! Your one-time password is %s - Dada Bhagwan Vignan Foundation", otp), StandardCharsets.UTF_8.toString()));
-                HttpModule.module().execute("http://api.msg91.com/api/sendhttp.php?" + queryParams);
+                long sequence = ringBuffer.next();
+                try {
+                    NotificationEvent event = ringBuffer.get(sequence);
+                    event.setCountry(participant.getCountry());
+                    event.setMail(participant.getMail());
+                    event.setMobile(participant.getMobile());
+                } finally {
+                    ringBuffer.publish(sequence);
+                }
             } else if("REST OF WORLD".equalsIgnoreCase(participant.getCountry())) {
                 if(participant.getMail() == null || participant.getMail().isEmpty()) {
-                    ctx.result("Mail not present").status(441);
+                    ctx.json(Response.of("Mail not present")).status(441);
+                }
+                long sequence = ringBuffer.next();
+                try {
+                    NotificationEvent event = ringBuffer.get(sequence);
+                    event.setCountry(participant.getCountry());
+                    event.setMail(participant.getMail());
+                    event.setMobile(participant.getMobile());
+                } finally {
+                    ringBuffer.publish(sequence);
                 }
                 sql = "select 1 from registration_app.participants where mail = :param";
                 param = participant.getMail();
@@ -80,23 +99,23 @@ public class Application {
                     m1.put("token", token);
                     ctx.json(m1).status(200);
                 } else {
-                    ctx.result("Otp does not match").status(441);
+                    ctx.json(Response.of("Otp does not match")).status(441);
                 }
             } catch (Exception e) {
-                ctx.result(e.getMessage()).status(500);
+                ctx.json(Response.of(e.getMessage())).status(500);
             }
         });
         app.post("/participants", (ctx) -> {
             Participants participant = ctx.bodyAsClass(Participants.class);
             BaseDao dao = new BaseDao(org.db.flyway.tables.Participants.PARTICIPANTS.asTable(), Participants.class, dslContext.configuration());
             dao.insert(participant);
-            ctx.result("Successfully Inserted");
+            ctx.json(Response.of("Successfully Inserted"));
         });
         app.put("/participants", (ctx) -> {
             Participants participant = ctx.bodyAsClass(Participants.class);
             BaseDao dao = new BaseDao(org.db.flyway.tables.Participants.PARTICIPANTS.asTable(), Participants.class, dslContext.configuration());
             dao.update(participant);
-            ctx.result("Successfully Inserted");
+            ctx.json(Response.of("Successfully Inserted"));
         });
         app.get("/participants/:id", (ctx) -> {
             BaseDao dao = new BaseDao(org.db.flyway.tables.Participants.PARTICIPANTS.asTable(), Participants.class, dslContext.configuration());
