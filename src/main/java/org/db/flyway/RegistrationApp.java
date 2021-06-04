@@ -61,7 +61,8 @@ public class RegistrationApp extends SchemaImpl {
     public final List<Sequence<?>> getSequences() {
         return Arrays.<Sequence<?>>asList(
             Sequences.LEVELS_ID_SEQ,
-            Sequences.PARTICIPANTS_ID_SEQ);
+            Sequences.PARTICIPANTS_ID_SEQ,
+            Sequences.ROLL_NO_SEQ);
     }
 
     @Override

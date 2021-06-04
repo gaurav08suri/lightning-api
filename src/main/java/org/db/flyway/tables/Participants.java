@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row8;
+import org.jooq.Row11;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -86,6 +86,21 @@ public class Participants extends TableImpl<ParticipantsRecord> {
      * The column <code>registration_app.participants.country</code>.
      */
     public final TableField<ParticipantsRecord, String> COUNTRY = createField(DSL.name("country"), SQLDataType.VARCHAR(100), this, "");
+
+    /**
+     * The column <code>registration_app.participants.language</code>.
+     */
+    public final TableField<ParticipantsRecord, String> LANGUAGE = createField(DSL.name("language"), SQLDataType.VARCHAR(100), this, "");
+
+    /**
+     * The column <code>registration_app.participants.center</code>.
+     */
+    public final TableField<ParticipantsRecord, String> CENTER = createField(DSL.name("center"), SQLDataType.VARCHAR(100), this, "");
+
+    /**
+     * The column <code>registration_app.participants.rollno</code>.
+     */
+    public final TableField<ParticipantsRecord, String> ROLLNO = createField(DSL.name("rollno"), SQLDataType.VARCHAR(20), this, "");
 
     private Participants(Name alias, Table<ParticipantsRecord> aliased) {
         this(alias, aliased, null);
@@ -167,11 +182,11 @@ public class Participants extends TableImpl<ParticipantsRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row8 type methods
+    // Row11 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row8<Integer, String, String, Integer, String, String, String, String> fieldsRow() {
-        return (Row8) super.fieldsRow();
+    public Row11<Integer, String, String, Integer, String, String, String, String, String, String, String> fieldsRow() {
+        return (Row11) super.fieldsRow();
     }
 }

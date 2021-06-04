@@ -23,6 +23,9 @@ public class Participants implements Serializable {
     private String  mail;
     private String  category;
     private String  country;
+    private String  language;
+    private String  center;
+    private String  rollno;
 
     public Participants() {}
 
@@ -35,6 +38,9 @@ public class Participants implements Serializable {
         this.mail = value.mail;
         this.category = value.category;
         this.country = value.country;
+        this.language = value.language;
+        this.center = value.center;
+        this.rollno = value.rollno;
     }
 
     public Participants(
@@ -45,7 +51,10 @@ public class Participants implements Serializable {
         String  mobile,
         String  mail,
         String  category,
-        String  country
+        String  country,
+        String  language,
+        String  center,
+        String  rollno
     ) {
         this.id = id;
         this.firstName = firstName;
@@ -55,6 +64,9 @@ public class Participants implements Serializable {
         this.mail = mail;
         this.category = category;
         this.country = country;
+        this.language = language;
+        this.center = center;
+        this.rollno = rollno;
     }
 
     /**
@@ -169,6 +181,48 @@ public class Participants implements Serializable {
         this.country = country;
     }
 
+    /**
+     * Getter for <code>registration_app.participants.language</code>.
+     */
+    public String getLanguage() {
+        return this.language;
+    }
+
+    /**
+     * Setter for <code>registration_app.participants.language</code>.
+     */
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    /**
+     * Getter for <code>registration_app.participants.center</code>.
+     */
+    public String getCenter() {
+        return this.center;
+    }
+
+    /**
+     * Setter for <code>registration_app.participants.center</code>.
+     */
+    public void setCenter(String center) {
+        this.center = center;
+    }
+
+    /**
+     * Getter for <code>registration_app.participants.rollno</code>.
+     */
+    public String getRollno() {
+        return this.rollno;
+    }
+
+    /**
+     * Setter for <code>registration_app.participants.rollno</code>.
+     */
+    public void setRollno(String rollno) {
+        this.rollno = rollno;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Participants (");
@@ -181,6 +235,9 @@ public class Participants implements Serializable {
         sb.append(", ").append(mail);
         sb.append(", ").append(category);
         sb.append(", ").append(country);
+        sb.append(", ").append(language);
+        sb.append(", ").append(center);
+        sb.append(", ").append(rollno);
 
         sb.append(")");
         return sb.toString();

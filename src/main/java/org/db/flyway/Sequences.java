@@ -24,4 +24,9 @@ public class Sequences {
      * The sequence <code>registration_app.participants_id_seq</code>
      */
     public static final Sequence<Integer> PARTICIPANTS_ID_SEQ = Internal.createSequence("participants_id_seq", RegistrationApp.REGISTRATION_APP, SQLDataType.INTEGER.nullable(false), null, null, null, null, false, null);
+
+    /**
+     * The sequence <code>registration_app.roll_no_seq</code>
+     */
+    public static final Sequence<Long> ROLL_NO_SEQ = Internal.createSequence("roll_no_seq", RegistrationApp.REGISTRATION_APP, SQLDataType.BIGINT.nullable(false), null, null, null, null, false, null);
 }

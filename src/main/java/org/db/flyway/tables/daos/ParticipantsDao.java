@@ -155,4 +155,46 @@ public class ParticipantsDao extends DAOImpl<ParticipantsRecord, org.db.flyway.t
     public List<org.db.flyway.tables.pojos.Participants> fetchByCountry(String... values) {
         return fetch(Participants.PARTICIPANTS.COUNTRY, values);
     }
+
+    /**
+     * Fetch records that have <code>language BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<org.db.flyway.tables.pojos.Participants> fetchRangeOfLanguage(String lowerInclusive, String upperInclusive) {
+        return fetchRange(Participants.PARTICIPANTS.LANGUAGE, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>language IN (values)</code>
+     */
+    public List<org.db.flyway.tables.pojos.Participants> fetchByLanguage(String... values) {
+        return fetch(Participants.PARTICIPANTS.LANGUAGE, values);
+    }
+
+    /**
+     * Fetch records that have <code>center BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<org.db.flyway.tables.pojos.Participants> fetchRangeOfCenter(String lowerInclusive, String upperInclusive) {
+        return fetchRange(Participants.PARTICIPANTS.CENTER, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>center IN (values)</code>
+     */
+    public List<org.db.flyway.tables.pojos.Participants> fetchByCenter(String... values) {
+        return fetch(Participants.PARTICIPANTS.CENTER, values);
+    }
+
+    /**
+     * Fetch records that have <code>rollno BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<org.db.flyway.tables.pojos.Participants> fetchRangeOfRollno(String lowerInclusive, String upperInclusive) {
+        return fetchRange(Participants.PARTICIPANTS.ROLLNO, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>rollno IN (values)</code>
+     */
+    public List<org.db.flyway.tables.pojos.Participants> fetchByRollno(String... values) {
+        return fetch(Participants.PARTICIPANTS.ROLLNO, values);
+    }
 }

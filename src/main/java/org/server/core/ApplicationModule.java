@@ -1,8 +1,11 @@
 package org.server.core;
 
 import com.lmax.disruptor.EventFactory;
+import com.lmax.disruptor.EventHandler;
+import com.lmax.disruptor.IgnoreExceptionHandler;
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;
+import com.lmax.disruptor.dsl.ExceptionHandlerWrapper;
 import com.lmax.disruptor.util.DaemonThreadFactory;
 import org.server.notification.NotificationEvent;
 import org.server.notification.NotificationEventHandler;
@@ -20,7 +23,9 @@ public class ApplicationModule {
         Disruptor<NotificationEvent> disruptor = new Disruptor<>(eventFactory, bufferSize, DaemonThreadFactory.INSTANCE);
 
         // Connect the handler
-        disruptor.handleEventsWith(new NotificationEventHandler());
+        EventHandler handler = new NotificationEventHandler();
+        disruptor.handleEventsWith(handler);
+        disruptor.handleExceptionsFor(handler).with(new IgnoreExceptionHandler());
 
         // Start the Disruptor, starts all threads running
         disruptor.start();

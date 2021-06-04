@@ -92,7 +92,8 @@
                             <records>true</records>
                             <daos>true</daos>
                             <pojos>true</pojos>
-                        </generate>
+                            <sequences>true</sequences>
+                        </generate>d
                     </generator>
                 </configuration>
             </plugin>
@@ -109,7 +110,7 @@
         <dependency>
             <groupId>io.javalin</groupId>
             <artifactId>javalin</artifactId>
-            <version>3.13.6</version>
+            <version>3.13.7</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

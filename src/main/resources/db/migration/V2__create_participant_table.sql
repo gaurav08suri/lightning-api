@@ -1,4 +1,8 @@
 -- V2__create_author_table.sql
+CREATE SEQUENCE registration_app.roll_no_seq
+START 1
+INCREMENT 1;
+
 
 CREATE TABLE registration_app.participants (
   id serial NOT NULL,
@@ -9,6 +13,9 @@ CREATE TABLE registration_app.participants (
   mail VARCHAR(50),
   category VARCHAR(100),
   country VARCHAR(100),
+  language VARCHAR(100),
+  center VARCHAR(100),
+  rollno VARCHAR(20),
 
   CONSTRAINT pk_participant PRIMARY KEY (ID)
 );
