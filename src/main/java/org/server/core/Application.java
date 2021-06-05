@@ -47,7 +47,7 @@ public class Application {
             String msg = String.format("JSCA! Your one-time password is %s - Dada Bhagwan Vignan Foundation", otp);
             if("INDIA".equalsIgnoreCase(participant.getCountry())) {
                 if(participant.getMobile() == null || participant.getMobile().isEmpty()) {
-                    ctx.json(Response.of("Mobile not present")).status(441);
+                    ctx.json(Response.of("Mobile not present")).status(500);
                 }
                 sql = "select id from registration_app.participants where mobile = :param";
                 param = participant.getMobile();
@@ -62,7 +62,7 @@ public class Application {
                 }
             } else if("REST OF WORLD".equalsIgnoreCase(participant.getCountry())) {
                 if(participant.getMail() == null || participant.getMail().isEmpty()) {
-                    ctx.json(Response.of("Mail not present")).status(441);
+                    ctx.json(Response.of("Mail not present")).status(500);
                 }
                 long sequence = ringBuffer.next();
                 try {
@@ -104,7 +104,7 @@ public class Application {
                     m1.put("token", token);
                     ctx.json(m1).status(200);
                 } else {
-                    ctx.json(Response.of("Otp does not match")).status(441);
+                    ctx.json(Response.of("Otp does not match")).status(226);
                 }
             } catch (Exception e) {
                 ctx.json(Response.of(e.getMessage())).status(500);
