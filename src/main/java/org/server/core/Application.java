@@ -3,58 +3,39 @@ package org.server.core;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
-import com.auth0.jwt.exceptions.JWTDecodeException;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lmax.disruptor.RingBuffer;
 import io.javalin.Javalin;
 import org.db.flyway.Sequences;
 import org.db.flyway.tables.pojos.Participants;
-import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
-import org.jooq.*;
+import org.jooq.DSLContext;
+import org.jooq.SQLDialect;
+import org.jooq.Sequence;
 import org.jooq.impl.DSL;
 import org.server.models.Response;
 import org.server.notification.NotificationEvent;
 
-import java.math.BigInteger;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 import static org.db.flyway.tables.Participants.PARTICIPANTS;
-import static org.db.flyway.tables.ParticipantsLevels.PARTICIPANTS_LEVELS;
-import static org.db.flyway.tables.Levels.LEVELS;
 
 
 public class Application {
 
-
-    private static SslContextFactory getSslContextFactory() {
-        SslContextFactory sslContextFactory = new SslContextFactory.Server();
-        sslContextFactory.setKeyStorePath(Application.class.getResource("/keystore.jks").toExternalForm());
-        sslContextFactory.setKeyStorePassword("lightning");
-        return sslContextFactory;
-    }
-
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args)  {
         QueuedThreadPool threadPool = new QueuedThreadPool(600, 10, 60);
         Random rnd = new Random();
         RingBuffer<NotificationEvent> ringBuffer = ApplicationModule.init();
-        Sequence<Long> seq = Sequences.ROLL_NO_SEQ;
         Javalin app = Javalin.create(c -> {
-            c.enableCorsForAllOrigins();
-            c.server(() -> {
-                Server server = new Server(threadPool);
-//                ServerConnector sslConnector = new ServerConnector(server, getSslContextFactory());
-//                sslConnector.setPort(8081);
-//                server.setConnectors(new Connector[]{sslConnector});
-                return server;
-            });
-
+//            c.enableCorsForAllOrigins();
+            c.server(() -> new Server(threadPool));
         } ).start(8081);
         DSLContext dslContext = DSL.using(StoreSource.REGISTRATION.dataSource(), SQLDialect.POSTGRES);
         app.get("/", (ctx) -> ctx.json(Response.of("Server is up and running")));

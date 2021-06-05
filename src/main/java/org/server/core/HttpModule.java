@@ -4,6 +4,7 @@ import org.eclipse.jetty.client.HttpClient;
 import org.eclipse.jetty.client.api.ContentResponse;
 
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class HttpModule {
@@ -23,8 +24,12 @@ public class HttpModule {
 
     public void execute(String url) throws InterruptedException, ExecutionException, TimeoutException {
         System.out.println(url);
-        ContentResponse response = httpClient.GET(url);
-        System.out.println(response);
+        httpClient.newRequest(url)
+                .timeout(60, TimeUnit.SECONDS)
+                .send(System.out::println);
+
+//        ContentResponse response = httpClient.GET(url);
+//        System.out.println(response);
     }
 
     public static final HttpModule module()
