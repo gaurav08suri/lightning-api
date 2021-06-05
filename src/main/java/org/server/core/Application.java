@@ -127,6 +127,7 @@ public class Application {
         app.get("/participants/:id", (ctx) -> {
             BaseDao dao = new BaseDao(PARTICIPANTS.asTable(), Participants.class, dslContext.configuration());
             Participants p = dao.findById(Integer.parseInt(ctx.pathParam("id")));
+            ctx.json(p);
         });
         app.get("/participants", (ctx) -> {
             BaseDao dao = new BaseDao(PARTICIPANTS.asTable(), Participants.class, dslContext.configuration());
