@@ -12,9 +12,7 @@ import org.db.flyway.tables.pojos.Participants;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
-import org.jooq.DSLContext;
-import org.jooq.SQLDialect;
-import org.jooq.Sequence;
+import org.jooq.*;
 import org.jooq.impl.DSL;
 import org.server.models.Response;
 import org.server.notification.NotificationEvent;
@@ -76,10 +74,12 @@ public class Application {
                 sql = "select id from registration_app.participants where mail = :param";
                 param = participant.getMail();
             }
-            Integer result = dslContext.resultQuery(sql, DSL.param("param", param)).execute();
+            Result<Record> result = dslContext.resultQuery(sql, DSL.param("param", param)).fetch();
             Map<String, String> map = new HashMap<>();
-            map.put("exists", String.valueOf(result > 0 ? 1 : 0));
-            map.put("id", String.valueOf(result));
+            map.put("exists", String.valueOf(result.size() > 0 ? 1 : 0));
+            if(result.size() > 0) {
+                map.put("id", String.valueOf(result.get(0).get("id")));
+            }
             ctx.json(map);
         });
         app.post("/verify_otp", (ctx) -> {
@@ -116,7 +116,8 @@ public class Application {
             System.out.println(participant.getRollno());
             BaseDao dao = new BaseDao(PARTICIPANTS.asTable(), Participants.class, dslContext.configuration());
             dao.insert(participant);
-            ctx.json(Response.of("Successfully Inserted"));
+            Participants p = dao.fetchOne(PARTICIPANTS.ROLLNO, participant.getRollno());
+            ctx.json(p);
         });
         app.put("/participants", (ctx) -> {
             Participants participant = ctx.bodyAsClass(Participants.class);
