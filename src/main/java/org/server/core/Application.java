@@ -13,7 +13,10 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.jooq.*;
+import org.jooq.exception.DataAccessException;
 import org.jooq.impl.DSL;
+import org.postgresql.util.PSQLException;
+import org.postgresql.util.PSQLState;
 import org.server.models.Response;
 import org.server.notification.NotificationEvent;
 
@@ -115,7 +118,19 @@ public class Application {
             participant.setRollno("QUIZ-" + dslContext.nextval(Sequences.ROLL_NO_SEQ));
             System.out.println(participant.getRollno());
             BaseDao dao = new BaseDao(PARTICIPANTS.asTable(), Participants.class, dslContext.configuration());
-            dao.insert(participant);
+            try {
+                dao.insert(participant);
+            } catch (DataAccessException e) {
+                String sqlState = e.sqlState();
+                for(PSQLState p : PSQLState.values()) {
+                    if (p.getState().equals(sqlState)) {
+                        sqlState = p.name();
+                        break;
+                    }
+                }
+                ctx.json(Response.of(sqlState)).status(500);
+                return;
+            }
             Participants p = dao.fetchOne(PARTICIPANTS.ROLLNO, participant.getRollno());
             ctx.json(p);
         });
