@@ -18,6 +18,7 @@ import org.jooq.impl.DSL;
 import org.postgresql.util.PSQLException;
 import org.postgresql.util.PSQLState;
 import org.server.models.Response;
+import org.server.notification.NotificationCategory;
 import org.server.notification.NotificationEvent;
 
 import java.sql.SQLException;
@@ -44,11 +45,10 @@ public class Application {
             Participants participant = ctx.bodyAsClass(Participants.class);
             String sql = null;
             String param = null;
-            int otp = rnd.nextInt(999999);
-            String msg = String.format("JSCA! Your one-time password is %s - Dada Bhagwan Vignan Foundation", otp);
             if("INDIA".equalsIgnoreCase(participant.getCountry())) {
                 if(participant.getMobile() == null || participant.getMobile().isEmpty()) {
                     ctx.json(Response.of("Mobile not present")).status(500);
+                    return;
                 }
                 sql = "select id from registration_app.participants where mobile = :param";
                 param = participant.getMobile();
@@ -58,12 +58,14 @@ public class Application {
                     event.setCountry(participant.getCountry());
                     event.setMail(participant.getMail());
                     event.setMobile(participant.getMobile());
+                    event.setCategory(NotificationCategory.OTP);
                 } finally {
                     ringBuffer.publish(sequence);
                 }
             } else if("REST OF WORLD".equalsIgnoreCase(participant.getCountry())) {
                 if(participant.getMail() == null || participant.getMail().isEmpty()) {
                     ctx.json(Response.of("Mail not present")).status(500);
+                    return;
                 }
                 long sequence = ringBuffer.next();
                 try {
@@ -71,6 +73,7 @@ public class Application {
                     event.setCountry(participant.getCountry());
                     event.setMail(participant.getMail());
                     event.setMobile(participant.getMobile());
+                    event.setCategory(NotificationCategory.OTP);
                 } finally {
                     ringBuffer.publish(sequence);
                 }
@@ -110,12 +113,13 @@ public class Application {
                     ctx.json(Response.of("Otp does not match")).status(226);
                 }
             } catch (Exception e) {
+                e.printStackTrace();
                 ctx.json(Response.of(e.getMessage())).status(500);
             }
         });
         app.post("/participants", (ctx) -> {
             Participants participant = ctx.bodyAsClass(Participants.class);
-            participant.setRollno("QUIZ-" + dslContext.nextval(Sequences.ROLL_NO_SEQ));
+            participant.setRollno(dslContext.nextval(Sequences.ROLL_NO_SEQ).toString());
             System.out.println(participant.getRollno());
             BaseDao dao = new BaseDao(PARTICIPANTS.asTable(), Participants.class, dslContext.configuration());
             try {
@@ -132,6 +136,18 @@ public class Application {
                 return;
             }
             Participants p = dao.fetchOne(PARTICIPANTS.ROLLNO, participant.getRollno());
+            long sequence = ringBuffer.next();
+            try {
+                NotificationEvent event = ringBuffer.get(sequence);
+                event.setCountry(p.getCountry());
+                event.setMail(p.getMail());
+                event.setMobile(p.getMobile());
+                event.setCategory(NotificationCategory.REGISTRATION);
+                event.setRollNo(p.getRollno());
+                event.setLanguage(p.getLanguage());
+            } finally {
+                ringBuffer.publish(sequence);
+            }
             ctx.json(p);
         });
         app.put("/participants", (ctx) -> {

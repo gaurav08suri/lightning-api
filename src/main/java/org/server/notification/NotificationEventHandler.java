@@ -15,20 +15,32 @@ public class NotificationEventHandler implements EventHandler<NotificationEvent>
 
     @Override
     public void onEvent(NotificationEvent notificationEvent, long l, boolean b) throws Exception {
-        int otp = rnd.nextInt(999999);
-//        System.out.println(Thread.currentThread().getName());
-//        System.out.println(otp);
-        String msg = String.format("JSCA! Your one-time password is %s - Dada Bhagwan Vignan Foundation", otp);
+        NotificationCategory category = notificationEvent.getCategory();
         if("INDIA".equalsIgnoreCase(notificationEvent.getCountry())) {
             if (notificationEvent.getMobile() != null && !notificationEvent.getMobile().isEmpty()) {
-                RedisModule.module().set(notificationEvent.getMobile(), String.valueOf(otp));
-                String queryParams = String.format("country=91&sender=AMBMHT&route=4&mobiles=%s&authkey=xxxxxxxx&DLT_TE_ID=1107160654358640880&message=%s", notificationEvent.getMobile(), URLEncoder.encode(msg, StandardCharsets.UTF_8.toString()));
-                HttpModule.module().execute("http://api.msg91.com/api/sendhttp.php?" + queryParams);
+                if (category == NotificationCategory.OTP) {
+                    int otp = rnd.nextInt(999999);
+                    String msg = String.format(category.smsMsg(), otp);
+                    RedisModule.module().set(notificationEvent.getMobile(), String.valueOf(otp));
+                    String queryParams = String.format("country=91&sender=AMBMHT&route=4&mobiles=%s&authkey=xxxxxxx&DLT_TE_ID=%s&message=%s", notificationEvent.getMobile(), category.templateId(), URLEncoder.encode(msg, StandardCharsets.UTF_8.toString()));
+                    HttpModule.module().execute("http://api.msg91.com/api/sendhttp.php?" + queryParams);
+                } else if(category == NotificationCategory.REGISTRATION) {
+                    String msg = String.format(category.smsMsg(), notificationEvent.getRollNo(), notificationEvent.getLanguage());
+                    String queryParams = String.format("country=91&sender=AMBMHT&route=4&mobiles=%s&authkey=xxxxxxx&DLT_TE_ID=%s&message=%s", notificationEvent.getMobile(), category.templateId(), URLEncoder.encode(msg, StandardCharsets.UTF_8.toString()));
+                    HttpModule.module().execute("http://api.msg91.com/api/sendhttp.php?" + queryParams);
+                }
             }
         } else if("REST OF WORLD".equalsIgnoreCase(notificationEvent.getCountry())) {
             if (notificationEvent.getMail() != null && !notificationEvent.getMail().isEmpty()) {
-                RedisModule.module().set(notificationEvent.getMail(), String.valueOf(otp));
-                MailModule.sendMail(notificationEvent.getMail(), "OTP for Registration", msg);
+                if (category == NotificationCategory.OTP) {
+                    int otp = rnd.nextInt(999999);
+                    String msg = String.format(category.mailMsg(), otp);
+                    RedisModule.module().set(notificationEvent.getMail(), String.valueOf(otp));
+                    MailModule.sendMail(notificationEvent.getMail(), "One Time Password (OTP) for Registration", msg);
+                } else if(category == NotificationCategory.REGISTRATION) {
+                    String msg = String.format(category.mailMsg(), notificationEvent.getRollNo(), notificationEvent.getLanguage());
+                    MailModule.sendMail(notificationEvent.getMail(), "Registration for Gurupurnima Quiz", msg);
+                }
             }
         }
     }

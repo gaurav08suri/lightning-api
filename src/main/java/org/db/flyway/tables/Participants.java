@@ -152,7 +152,7 @@ public class Participants extends TableImpl<ParticipantsRecord> {
 
     @Override
     public List<UniqueKey<ParticipantsRecord>> getKeys() {
-        return Arrays.<UniqueKey<ParticipantsRecord>>asList(Keys.PK_PARTICIPANT);
+        return Arrays.<UniqueKey<ParticipantsRecord>>asList(Keys.PK_PARTICIPANT, Keys.MOBILE_UNIQ, Keys.MAIL_UNIQ);
     }
 
     @Override

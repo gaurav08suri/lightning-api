@@ -29,6 +29,8 @@ public class Keys {
     // -------------------------------------------------------------------------
 
     public static final UniqueKey<LevelsRecord> PK_LEVEL = Internal.createUniqueKey(Levels.LEVELS, DSL.name("pk_level"), new TableField[] { Levels.LEVELS.ID }, true);
+    public static final UniqueKey<ParticipantsRecord> MAIL_UNIQ = Internal.createUniqueKey(Participants.PARTICIPANTS, DSL.name("mail_uniq"), new TableField[] { Participants.PARTICIPANTS.MAIL }, true);
+    public static final UniqueKey<ParticipantsRecord> MOBILE_UNIQ = Internal.createUniqueKey(Participants.PARTICIPANTS, DSL.name("mobile_uniq"), new TableField[] { Participants.PARTICIPANTS.MOBILE }, true);
     public static final UniqueKey<ParticipantsRecord> PK_PARTICIPANT = Internal.createUniqueKey(Participants.PARTICIPANTS, DSL.name("pk_participant"), new TableField[] { Participants.PARTICIPANTS.ID }, true);
 
     // -------------------------------------------------------------------------

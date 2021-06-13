@@ -115,6 +115,13 @@ public class ParticipantsDao extends DAOImpl<ParticipantsRecord, org.db.flyway.t
     }
 
     /**
+     * Fetch a unique record that has <code>mobile = value</code>
+     */
+    public org.db.flyway.tables.pojos.Participants fetchOneByMobile(String value) {
+        return fetchOne(Participants.PARTICIPANTS.MOBILE, value);
+    }
+
+    /**
      * Fetch records that have <code>mail BETWEEN lowerInclusive AND upperInclusive</code>
      */
     public List<org.db.flyway.tables.pojos.Participants> fetchRangeOfMail(String lowerInclusive, String upperInclusive) {
@@ -126,6 +133,13 @@ public class ParticipantsDao extends DAOImpl<ParticipantsRecord, org.db.flyway.t
      */
     public List<org.db.flyway.tables.pojos.Participants> fetchByMail(String... values) {
         return fetch(Participants.PARTICIPANTS.MAIL, values);
+    }
+
+    /**
+     * Fetch a unique record that has <code>mail = value</code>
+     */
+    public org.db.flyway.tables.pojos.Participants fetchOneByMail(String value) {
+        return fetchOne(Participants.PARTICIPANTS.MAIL, value);
     }
 
     /**

@@ -5,7 +5,6 @@ import com.lmax.disruptor.EventHandler;
 import com.lmax.disruptor.IgnoreExceptionHandler;
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;
-import com.lmax.disruptor.dsl.ExceptionHandlerWrapper;
 import com.lmax.disruptor.util.DaemonThreadFactory;
 import org.server.notification.NotificationEvent;
 import org.server.notification.NotificationEventHandler;
