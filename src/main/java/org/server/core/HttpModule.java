@@ -1,10 +1,8 @@
 package org.server.core;
 
-import org.eclipse.jetty.client.HttpClient;
-import org.eclipse.jetty.client.api.ContentResponse;
+import kong.unirest.Unirest;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 public class HttpModule {
@@ -18,24 +16,23 @@ public class HttpModule {
     }
 
     private void build() throws Exception {
-        httpClient  = new HttpClient();
-        httpClient.start();
+//        httpClient  = new HttpClient();
+//        httpClient.start();
     }
 
     public void execute(String url) throws InterruptedException, ExecutionException, TimeoutException {
         System.out.println(url);
-        httpClient.newRequest(url)
-                .timeout(60, TimeUnit.SECONDS)
-                .send(System.out::println);
-
-//        ContentResponse response = httpClient.GET(url);
-//        System.out.println(response);
+//        httpClient.newRequest(url)
+//                .timeout(60, TimeUnit.SECONDS)
+//                .send(System.out::println);
+        Unirest.get(url)
+                .asStringAsync(System.out::println);
     }
 
     public static final HttpModule module()
     {
         return module_;
     }
-    private HttpClient httpClient;
+//    private HttpClient httpClient;
     private static final HttpModule module_ = new HttpModule();
 }
