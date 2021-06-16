@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Random;
 
 import static org.db.flyway.tables.Participants.PARTICIPANTS;
+import static org.jooq.impl.DSL.count;
 
 
 public class Application {
@@ -161,9 +162,37 @@ public class Application {
             Participants p = dao.findById(Integer.parseInt(ctx.pathParam("id")));
             ctx.json(p);
         });
-        app.get("/participants", (ctx) -> {
-            BaseDao dao = new BaseDao(PARTICIPANTS.asTable(), Participants.class, dslContext.configuration());
-            ctx.json(dao.findAll());
+        app.get("/participantscnt", (ctx) -> {
+            Result<Record2<String, Integer>> result = dslContext.select(PARTICIPANTS.LANGUAGE, count().as("CNT")).from(PARTICIPANTS).groupBy(PARTICIPANTS.LANGUAGE).fetch();
+//            BaseDao dao = new BaseDao(PARTICIPANTS.asTable(), Participants.class, dslContext.configuration());
+            String data = "";
+            int totalCount = 0;
+            for(Record2 r : result) {
+                data += "<tr>" +
+                        "<td>" +
+                        r.get(PARTICIPANTS.LANGUAGE) +
+                        "</td>" +
+                        "<td>" +
+                        r.get("CNT") +
+                        "</td>" +
+                        "</tr>";
+                totalCount += r.get("CNT", Integer.class);
+            }
+            String table = "<table border>" +
+                    "<tr>" +
+                    "<th>Language</th>" +
+                    "<th>Count</th>" +
+                    "</tr>" +
+                   data +
+                    "</table>";
+            ctx.html("<html>" +
+                    "<body>" +
+                    table +
+                    "<h1>Total Count: " +
+                    totalCount +
+                    "</h1>" +
+                    "</body>" +
+                    "</html>");
         });
     }
 }
