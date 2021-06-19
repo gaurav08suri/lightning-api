@@ -9,6 +9,37 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
 
+
+enum Link {
+    GUJ("Gujarati", "https://rebrand.ly/GP2-guj"),
+    HIN("Hindi", "https://rebrand.ly/GP2-hin"),
+    ENG("English", "https://rebrand.ly/GP2-eng"),
+    GER("German", "https://rebrand.ly/GP2-ger"),
+    SPA("Spanish", "https://rebrand.ly/GP2-spa"),
+    POR("Portuguese", "https://rebrand.ly/GP2-por"),
+    ;
+
+    private final String language;
+    private final String link;
+
+
+    Link(String language, String link) {
+
+        this.language = language;
+        this.link = link;
+    }
+
+    public static String ofLink(String language) {
+        for(Link l :values()) {
+            if(l.language.equalsIgnoreCase(language)) {
+                return l.link;
+            }
+        }
+        return "";
+    }
+
+}
+
 public class NotificationEventHandler implements EventHandler<NotificationEvent> {
 
     Random rnd = new Random();
@@ -25,7 +56,7 @@ public class NotificationEventHandler implements EventHandler<NotificationEvent>
                     String queryParams = String.format("country=91&sender=AMBMHT&route=4&mobiles=%s&authkey=xxxxxxx&DLT_TE_ID=%s&message=%s", notificationEvent.getMobile(), category.templateId(), URLEncoder.encode(msg, StandardCharsets.UTF_8.toString()));
                     HttpModule.module().execute("http://api.msg91.com/api/sendhttp.php?" + queryParams);
                 } else if(category == NotificationCategory.REGISTRATION) {
-                    String msg = String.format(category.smsMsg(), notificationEvent.getRollNo(), notificationEvent.getLanguage());
+                    String msg = String.format(category.smsMsg(), notificationEvent.getRollNo(), Link.ofLink(notificationEvent.getLanguage()));
                     String queryParams = String.format("country=91&sender=AMBMHT&route=4&mobiles=%s&authkey=xxxxxxx&DLT_TE_ID=%s&message=%s", notificationEvent.getMobile(), category.templateId(), URLEncoder.encode(msg, StandardCharsets.UTF_8.toString()));
                     HttpModule.module().execute("http://api.msg91.com/api/sendhttp.php?" + queryParams);
                 }
@@ -38,8 +69,8 @@ public class NotificationEventHandler implements EventHandler<NotificationEvent>
                     RedisModule.module().set(notificationEvent.getMail(), String.valueOf(otp));
                     MailModule.sendMail(notificationEvent.getMail(), "One Time Password (OTP) for Registration", msg);
                 } else if(category == NotificationCategory.REGISTRATION) {
-                    String msg = String.format(category.mailMsg(), notificationEvent.getRollNo(), notificationEvent.getLanguage());
-                    MailModule.sendMail(notificationEvent.getMail(), "Registration for Gurupurnima Quiz", msg);
+                    String msg = String.format(category.mailMsg(), notificationEvent.getRollNo(), Link.ofLink(notificationEvent.getLanguage()));
+                    MailModule.sendMail(notificationEvent.getMail(), "Gurupurnima Quiz - Level 1", msg);
                 }
             }
         }
