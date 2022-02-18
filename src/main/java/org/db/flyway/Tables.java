@@ -7,6 +7,7 @@ package org.db.flyway;
 import org.db.flyway.tables.Levels;
 import org.db.flyway.tables.Participants;
 import org.db.flyway.tables.ParticipantsLevels;
+import org.db.flyway.tables.Runner;
 
 
 /**
@@ -29,4 +30,9 @@ public class Tables {
      * The table <code>registration_app.participants_levels</code>.
      */
     public static final ParticipantsLevels PARTICIPANTS_LEVELS = ParticipantsLevels.PARTICIPANTS_LEVELS;
+
+    /**
+     * The table <code>registration_app.runner</code>.
+     */
+    public static final Runner RUNNER = Runner.RUNNER;
 }

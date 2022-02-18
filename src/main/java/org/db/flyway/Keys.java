@@ -7,9 +7,11 @@ package org.db.flyway;
 import org.db.flyway.tables.Levels;
 import org.db.flyway.tables.Participants;
 import org.db.flyway.tables.ParticipantsLevels;
+import org.db.flyway.tables.Runner;
 import org.db.flyway.tables.records.LevelsRecord;
 import org.db.flyway.tables.records.ParticipantsLevelsRecord;
 import org.db.flyway.tables.records.ParticipantsRecord;
+import org.db.flyway.tables.records.RunnerRecord;
 import org.jooq.ForeignKey;
 import org.jooq.TableField;
 import org.jooq.UniqueKey;
@@ -32,6 +34,7 @@ public class Keys {
     public static final UniqueKey<ParticipantsRecord> MAIL_UNIQ = Internal.createUniqueKey(Participants.PARTICIPANTS, DSL.name("mail_uniq"), new TableField[] { Participants.PARTICIPANTS.MAIL }, true);
     public static final UniqueKey<ParticipantsRecord> MOBILE_UNIQ = Internal.createUniqueKey(Participants.PARTICIPANTS, DSL.name("mobile_uniq"), new TableField[] { Participants.PARTICIPANTS.MOBILE }, true);
     public static final UniqueKey<ParticipantsRecord> PK_PARTICIPANT = Internal.createUniqueKey(Participants.PARTICIPANTS, DSL.name("pk_participant"), new TableField[] { Participants.PARTICIPANTS.ID }, true);
+    public static final UniqueKey<RunnerRecord> PK_RUNNER = Internal.createUniqueKey(Runner.RUNNER, DSL.name("pk_runner"), new TableField[] { Runner.RUNNER.ID }, true);
 
     // -------------------------------------------------------------------------
     // FOREIGN KEY definitions

@@ -26,6 +26,10 @@ public class Participants implements Serializable {
     private String  language;
     private String  center;
     private String  rollno;
+    private String  level1Score;
+    private String  level2Score;
+    private String  level3Score;
+    private String  level4Score;
 
     public Participants() {}
 
@@ -41,6 +45,10 @@ public class Participants implements Serializable {
         this.language = value.language;
         this.center = value.center;
         this.rollno = value.rollno;
+        this.level1Score = value.level1Score;
+        this.level2Score = value.level2Score;
+        this.level3Score = value.level3Score;
+        this.level4Score = value.level4Score;
     }
 
     public Participants(
@@ -54,7 +62,11 @@ public class Participants implements Serializable {
         String  country,
         String  language,
         String  center,
-        String  rollno
+        String  rollno,
+        String  level1Score,
+        String  level2Score,
+        String  level3Score,
+        String  level4Score
     ) {
         this.id = id;
         this.firstName = firstName;
@@ -67,6 +79,10 @@ public class Participants implements Serializable {
         this.language = language;
         this.center = center;
         this.rollno = rollno;
+        this.level1Score = level1Score;
+        this.level2Score = level2Score;
+        this.level3Score = level3Score;
+        this.level4Score = level4Score;
     }
 
     /**
@@ -223,6 +239,62 @@ public class Participants implements Serializable {
         this.rollno = rollno;
     }
 
+    /**
+     * Getter for <code>registration_app.participants.level1_score</code>.
+     */
+    public String getLevel1Score() {
+        return this.level1Score;
+    }
+
+    /**
+     * Setter for <code>registration_app.participants.level1_score</code>.
+     */
+    public void setLevel1Score(String level1Score) {
+        this.level1Score = level1Score;
+    }
+
+    /**
+     * Getter for <code>registration_app.participants.level2_score</code>.
+     */
+    public String getLevel2Score() {
+        return this.level2Score;
+    }
+
+    /**
+     * Setter for <code>registration_app.participants.level2_score</code>.
+     */
+    public void setLevel2Score(String level2Score) {
+        this.level2Score = level2Score;
+    }
+
+    /**
+     * Getter for <code>registration_app.participants.level3_score</code>.
+     */
+    public String getLevel3Score() {
+        return this.level3Score;
+    }
+
+    /**
+     * Setter for <code>registration_app.participants.level3_score</code>.
+     */
+    public void setLevel3Score(String level3Score) {
+        this.level3Score = level3Score;
+    }
+
+    /**
+     * Getter for <code>registration_app.participants.level4_score</code>.
+     */
+    public String getLevel4Score() {
+        return this.level4Score;
+    }
+
+    /**
+     * Setter for <code>registration_app.participants.level4_score</code>.
+     */
+    public void setLevel4Score(String level4Score) {
+        this.level4Score = level4Score;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Participants (");
@@ -238,6 +310,10 @@ public class Participants implements Serializable {
         sb.append(", ").append(language);
         sb.append(", ").append(center);
         sb.append(", ").append(rollno);
+        sb.append(", ").append(level1Score);
+        sb.append(", ").append(level2Score);
+        sb.append(", ").append(level3Score);
+        sb.append(", ").append(level4Score);
 
         sb.append(")");
         return sb.toString();

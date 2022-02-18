@@ -211,4 +211,60 @@ public class ParticipantsDao extends DAOImpl<ParticipantsRecord, org.db.flyway.t
     public List<org.db.flyway.tables.pojos.Participants> fetchByRollno(String... values) {
         return fetch(Participants.PARTICIPANTS.ROLLNO, values);
     }
+
+    /**
+     * Fetch records that have <code>level1_score BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<org.db.flyway.tables.pojos.Participants> fetchRangeOfLevel1Score(String lowerInclusive, String upperInclusive) {
+        return fetchRange(Participants.PARTICIPANTS.LEVEL1_SCORE, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>level1_score IN (values)</code>
+     */
+    public List<org.db.flyway.tables.pojos.Participants> fetchByLevel1Score(String... values) {
+        return fetch(Participants.PARTICIPANTS.LEVEL1_SCORE, values);
+    }
+
+    /**
+     * Fetch records that have <code>level2_score BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<org.db.flyway.tables.pojos.Participants> fetchRangeOfLevel2Score(String lowerInclusive, String upperInclusive) {
+        return fetchRange(Participants.PARTICIPANTS.LEVEL2_SCORE, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>level2_score IN (values)</code>
+     */
+    public List<org.db.flyway.tables.pojos.Participants> fetchByLevel2Score(String... values) {
+        return fetch(Participants.PARTICIPANTS.LEVEL2_SCORE, values);
+    }
+
+    /**
+     * Fetch records that have <code>level3_score BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<org.db.flyway.tables.pojos.Participants> fetchRangeOfLevel3Score(String lowerInclusive, String upperInclusive) {
+        return fetchRange(Participants.PARTICIPANTS.LEVEL3_SCORE, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>level3_score IN (values)</code>
+     */
+    public List<org.db.flyway.tables.pojos.Participants> fetchByLevel3Score(String... values) {
+        return fetch(Participants.PARTICIPANTS.LEVEL3_SCORE, values);
+    }
+
+    /**
+     * Fetch records that have <code>level4_score BETWEEN lowerInclusive AND upperInclusive</code>
+     */
+    public List<org.db.flyway.tables.pojos.Participants> fetchRangeOfLevel4Score(String lowerInclusive, String upperInclusive) {
+        return fetchRange(Participants.PARTICIPANTS.LEVEL4_SCORE, lowerInclusive, upperInclusive);
+    }
+
+    /**
+     * Fetch records that have <code>level4_score IN (values)</code>
+     */
+    public List<org.db.flyway.tables.pojos.Participants> fetchByLevel4Score(String... values) {
+        return fetch(Participants.PARTICIPANTS.LEVEL4_SCORE, values);
+    }
 }
