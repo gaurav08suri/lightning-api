@@ -16,6 +16,11 @@ import org.jooq.impl.SQLDataType;
 public class Sequences {
 
     /**
+     * The sequence <code>registration_app.id_seq</code>
+     */
+    public static final Sequence<Long> ID_SEQ = Internal.createSequence("id_seq", RegistrationApp.REGISTRATION_APP, SQLDataType.BIGINT.nullable(false), null, null, null, null, false, null);
+
+    /**
      * The sequence <code>registration_app.levels_id_seq</code>
      */
     public static final Sequence<Integer> LEVELS_ID_SEQ = Internal.createSequence("levels_id_seq", RegistrationApp.REGISTRATION_APP, SQLDataType.INTEGER.nullable(false), null, null, null, null, false, null);
@@ -29,4 +34,9 @@ public class Sequences {
      * The sequence <code>registration_app.roll_no_seq</code>
      */
     public static final Sequence<Long> ROLL_NO_SEQ = Internal.createSequence("roll_no_seq", RegistrationApp.REGISTRATION_APP, SQLDataType.BIGINT.nullable(false), null, null, null, null, false, null);
+
+    /**
+     * The sequence <code>registration_app.runner_id_seq</code>
+     */
+    public static final Sequence<Integer> RUNNER_ID_SEQ = Internal.createSequence("runner_id_seq", RegistrationApp.REGISTRATION_APP, SQLDataType.INTEGER.nullable(false), null, null, null, null, false, null);
 }

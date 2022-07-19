@@ -53,11 +53,12 @@ public class NotificationEventHandler implements EventHandler<NotificationEvent>
                     int otp = rnd.nextInt(999999);
                     String msg = String.format(category.smsMsg(), otp);
                     RedisModule.module().set(notificationEvent.getMobile(), String.valueOf(otp));
-                    String queryParams = String.format("country=91&sender=AMBMHT&route=4&mobiles=%s&authkey=xxxxxxx&DLT_TE_ID=%s&message=%s", notificationEvent.getMobile(), category.templateId(), URLEncoder.encode(msg, StandardCharsets.UTF_8.toString()));
+                    String queryParams = String.format("country=91&sender=AMBMHT&route=4&mobiles=%s&authkey=xxxxxxxx&DLT_TE_ID=%s&message=%s", notificationEvent.getMobile(), category.templateId(), URLEncoder.encode(msg, StandardCharsets.UTF_8.toString()));
                     HttpModule.module().execute("http://api.msg91.com/api/sendhttp.php?" + queryParams);
                 } else if(category == NotificationCategory.REGISTRATION) {
+                    System.out.println(notificationEvent);
                     String msg = String.format(category.smsMsg(), notificationEvent.getRollNo(), Link.ofLink(notificationEvent.getLanguage()));
-                    String queryParams = String.format("country=91&sender=AMBMHT&route=4&mobiles=%s&authkey=xxxxxxx&DLT_TE_ID=%s&message=%s", notificationEvent.getMobile(), category.templateId(), URLEncoder.encode(msg, StandardCharsets.UTF_8.toString()));
+                    String queryParams = String.format("country=91&sender=AMBMHT&route=4&mobiles=%s&authkey=xxxxxxxx&DLT_TE_ID=%s&message=%s", notificationEvent.getMobile(), category.templateId(), URLEncoder.encode(msg, StandardCharsets.UTF_8.toString()));
                     HttpModule.module().execute("http://api.msg91.com/api/sendhttp.php?" + queryParams);
                 }
             }

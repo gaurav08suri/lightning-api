@@ -10,6 +10,7 @@ import java.util.List;
 import org.db.flyway.tables.Levels;
 import org.db.flyway.tables.Participants;
 import org.db.flyway.tables.ParticipantsLevels;
+import org.db.flyway.tables.Runner;
 import org.jooq.Catalog;
 import org.jooq.Sequence;
 import org.jooq.Table;
@@ -45,6 +46,11 @@ public class RegistrationApp extends SchemaImpl {
     public final ParticipantsLevels PARTICIPANTS_LEVELS = ParticipantsLevels.PARTICIPANTS_LEVELS;
 
     /**
+     * The table <code>registration_app.runner</code>.
+     */
+    public final Runner RUNNER = Runner.RUNNER;
+
+    /**
      * No further instances allowed
      */
     private RegistrationApp() {
@@ -60,9 +66,11 @@ public class RegistrationApp extends SchemaImpl {
     @Override
     public final List<Sequence<?>> getSequences() {
         return Arrays.<Sequence<?>>asList(
+            Sequences.ID_SEQ,
             Sequences.LEVELS_ID_SEQ,
             Sequences.PARTICIPANTS_ID_SEQ,
-            Sequences.ROLL_NO_SEQ);
+            Sequences.ROLL_NO_SEQ,
+            Sequences.RUNNER_ID_SEQ);
     }
 
     @Override
@@ -70,6 +78,7 @@ public class RegistrationApp extends SchemaImpl {
         return Arrays.<Table<?>>asList(
             Levels.LEVELS,
             Participants.PARTICIPANTS,
-            ParticipantsLevels.PARTICIPANTS_LEVELS);
+            ParticipantsLevels.PARTICIPANTS_LEVELS,
+            Runner.RUNNER);
     }
 }

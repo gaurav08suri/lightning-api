@@ -57,4 +57,15 @@ public class NotificationEvent {
     private NotificationCategory category_;
     private String rollNo_;
     private String language_;
+    private String distance_;
+    public int id;
+
+    public String getDistance_() {
+        return distance_;
+    }
+
+    public NotificationEvent setDistance_(String distance_) {
+        this.distance_ = distance_;
+        return this;
+    }
 }

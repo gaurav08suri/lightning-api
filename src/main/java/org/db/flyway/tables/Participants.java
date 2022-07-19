@@ -15,7 +15,7 @@ import org.jooq.ForeignKey;
 import org.jooq.Identity;
 import org.jooq.Name;
 import org.jooq.Record;
-import org.jooq.Row11;
+import org.jooq.Row15;
 import org.jooq.Schema;
 import org.jooq.Table;
 import org.jooq.TableField;
@@ -102,6 +102,26 @@ public class Participants extends TableImpl<ParticipantsRecord> {
      */
     public final TableField<ParticipantsRecord, String> ROLLNO = createField(DSL.name("rollno"), SQLDataType.VARCHAR(20), this, "");
 
+    /**
+     * The column <code>registration_app.participants.level1_score</code>.
+     */
+    public final TableField<ParticipantsRecord, String> LEVEL1_SCORE = createField(DSL.name("level1_score"), SQLDataType.VARCHAR(100), this, "");
+
+    /**
+     * The column <code>registration_app.participants.level2_score</code>.
+     */
+    public final TableField<ParticipantsRecord, String> LEVEL2_SCORE = createField(DSL.name("level2_score"), SQLDataType.VARCHAR(100), this, "");
+
+    /**
+     * The column <code>registration_app.participants.level3_score</code>.
+     */
+    public final TableField<ParticipantsRecord, String> LEVEL3_SCORE = createField(DSL.name("level3_score"), SQLDataType.VARCHAR(100), this, "");
+
+    /**
+     * The column <code>registration_app.participants.level4_score</code>.
+     */
+    public final TableField<ParticipantsRecord, String> LEVEL4_SCORE = createField(DSL.name("level4_score"), SQLDataType.VARCHAR(100), this, "");
+
     private Participants(Name alias, Table<ParticipantsRecord> aliased) {
         this(alias, aliased, null);
     }
@@ -182,11 +202,11 @@ public class Participants extends TableImpl<ParticipantsRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row11 type methods
+    // Row15 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row11<Integer, String, String, Integer, String, String, String, String, String, String, String> fieldsRow() {
-        return (Row11) super.fieldsRow();
+    public Row15<Integer, String, String, Integer, String, String, String, String, String, String, String, String, String, String, String> fieldsRow() {
+        return (Row15) super.fieldsRow();
     }
 }
