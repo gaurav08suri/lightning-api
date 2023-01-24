@@ -10,7 +10,7 @@ public enum YouthAppMenu {
     AKRAM_YOUTH("Akram Youth", "https://youth.dadabhagwan.org/library/akram-youth", ""),
     YOUTH_EVENTS("Youth Events Schedule", "https://youth.dadabhagwan.org/schedule/", ""),
     NOTIFY_AY("Notify New Akram Youth", "", ""),
-    ABOUT_US("About Us", "", ""),
+    ABOUT_US("About Us", "https://youth.dadabhagwan.org/about-us/", ""),
     ;
 
 
