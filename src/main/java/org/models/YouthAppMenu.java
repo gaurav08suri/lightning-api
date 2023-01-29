@@ -6,11 +6,11 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum YouthAppMenu {
 
-    YOUTH_WEBSITE("Youth Website", "https://youth.dadabhagwan.org", ""),
-    AKRAM_YOUTH("Akram Youth", "https://youth.dadabhagwan.org/library/akram-youth", ""),
-    YOUTH_EVENTS("Youth Events Schedule", "https://youth.dadabhagwan.org/schedule/", ""),
-    NOTIFY_AY("Notify New Akram Youth", "", ""),
-    ABOUT_US("About Us", "https://youth.dadabhagwan.org/about-us/", ""),
+    YOUTH_WEBSITE("Youth Website", "https://youth.dadabhagwan.org", "https://youth.dadabhagwan.org/images/youth-logo.svg"),
+    AKRAM_YOUTH("Akram Youth", "https://youth.dadabhagwan.org/library/akram-youth", "https://download.dadabhagwan.org/Youth/AkramYouth/Eng/2023/img/eng-jan-2023.jpg"),
+    YOUTH_EVENTS("Youth Events Schedule", "https://youth.dadabhagwan.org/schedule/", "https://youth.dadabhagwan.org/media/4thbntw2/schedule-banner.jpg"),
+//    NOTIFY_AY("Notify New Akram Youth", "", ""),
+    ABOUT_US("About Us", "https://youth.dadabhagwan.org/about-us/", "https://youth.dadabhagwan.org/media/5jziaxav/gnc-banner.jpg"),
     ;
 
 
